@@ -1,5 +1,6 @@
+
 import Link from 'next/link';
-import { GalleryVerticalEnd } from 'lucide-react';
+import { GalleryVerticalEnd, Image } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { Button } from './ui/button';
 
@@ -13,6 +14,12 @@ export function Header() {
           </h1>
         </Link>
         <div className="flex items-center gap-2">
+           <Button variant="ghost" asChild>
+            <Link href="/apod">
+              <Image />
+              <span className="ml-2 hidden sm:inline">Picture of the Day</span>
+            </Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/gallery">
               <GalleryVerticalEnd />

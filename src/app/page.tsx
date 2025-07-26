@@ -1,12 +1,15 @@
 import { getApod } from '@/lib/nasa';
 import { ApodCard } from '@/components/apod-card';
+import { parseISO } from 'date-fns';
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   let apodData;
   let error = null;
+  const dateStr = searchParams?.date;
+  const selectedDate = dateStr ? parseISO(dateStr) : undefined;
+  
   try {
-    // Always fetch today's data on initial load
-    apodData = await getApod();
+    apodData = await getApod(selectedDate);
   } catch (e: any) {
     error = e.message || 'An unknown error occurred.';
   }

@@ -1,4 +1,5 @@
 # Firebase Studio
+https://cosmicpic.netlify.app/
 
 This is a NextJS starter in Firebase Studio.
 

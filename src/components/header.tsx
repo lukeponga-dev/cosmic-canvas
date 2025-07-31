@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { GalleryVerticalEnd, Image } from 'lucide-react';
+import { GalleryVerticalEnd, Image, WandSparkles } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { Button } from './ui/button';
 import { SurpriseMeButton } from './surprise-me-button';
@@ -25,6 +25,12 @@ export function Header() {
             <Link href="/gallery">
               <GalleryVerticalEnd />
               <span className="ml-2 hidden sm:inline">Gallery</span>
+            </Link>
+          </Button>
+           <Button variant="ghost" asChild>
+            <Link href="/generate">
+              <WandSparkles />
+              <span className="ml-2 hidden sm:inline">Generate</span>
             </Link>
           </Button>
           <SurpriseMeButton />

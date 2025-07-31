@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { GalleryVerticalEnd, Image } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { Button } from './ui/button';
+import { SurpriseMeButton } from './surprise-me-button';
 
 export function Header() {
   return (
@@ -26,6 +27,7 @@ export function Header() {
               <span className="ml-2 hidden sm:inline">Gallery</span>
             </Link>
           </Button>
+          <SurpriseMeButton />
           <ThemeToggle />
         </div>
       </div>

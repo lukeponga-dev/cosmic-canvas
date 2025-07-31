@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
-import { Sparkles, Loader2, Info } from 'lucide-react';
+import { Sparkles, Loader2, Info, Baby } from 'lucide-react';
 
 import { type ApodData } from '@/lib/types';
 import { getApodAction } from '@/app/actions';
 import { generateApodDescription } from '@/ai/flows/generate-apod-description';
+import { generateApodExplanationELI5 } from '@/ai/flows/generate-apod-explanation-eli5';
 import { DatePicker } from '@/components/date-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,17 +20,21 @@ type ApodCardProps = {
   initialApodData: ApodData;
 };
 
+type GeneratingState = 'none' | 'description' | 'eli5';
+
 export function ApodCard({ initialApodData }: ApodCardProps) {
   const [apodData, setApodData] = useState<ApodData>(initialApodData);
   const [date, setDate] = useState<Date | undefined>(parseISO(initialApodData.date));
   const [aiDescription, setAiDescription] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiELI5, setAiELI5] = useState<string | null>(null);
+  const [generating, setGenerating] = useState<GeneratingState>('none');
   const [isFetchingNewDate, setIsFetchingNewDate] = useState(false);
   const { toast } = useToast();
 
   const handleDateChange = (newDate: Date | undefined) => {
     setDate(newDate);
     setAiDescription(null);
+    setAiELI5(null);
     if (newDate) {
       setIsFetchingNewDate(true);
       getApodAction(newDate)
@@ -51,7 +56,7 @@ export function ApodCard({ initialApodData }: ApodCardProps) {
   };
   
   const handleGenerateDescription = async () => {
-    setIsGenerating(true);
+    setGenerating('description');
     setAiDescription(null);
     try {
       const result = await generateApodDescription({
@@ -67,12 +72,35 @@ export function ApodCard({ initialApodData }: ApodCardProps) {
         description: 'The AI seems to be lost in space. Please try again.',
       });
     } finally {
-      setIsGenerating(false);
+      setGenerating('none');
+    }
+  };
+
+  const handleGenerateELI5 = async () => {
+    setGenerating('eli5');
+    setAiELI5(null);
+    try {
+      const result = await generateApodExplanationELI5({
+        imageUrl: apodData.url,
+        title: apodData.title,
+      });
+      setAiELI5(result.explanation);
+    } catch (error) {
+      console.error('Error generating ELI5 explanation:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error generating explanation',
+        description: 'The AI seems to be lost in space. Please try again.',
+      });
+    } finally {
+      setGenerating('none');
     }
   };
 
   const { title, explanation, url, media_type, copyright } = apodData;
   const displayDate = format(date!, 'MMMM d, yyyy');
+
+  const isLoading = generating !== 'none' || isFetchingNewDate;
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -127,37 +155,71 @@ export function ApodCard({ initialApodData }: ApodCardProps) {
             </div>
           </CardContent>
           <CardFooter className="flex-col items-start gap-4">
-            <Button onClick={handleGenerateDescription} disabled={isGenerating || isFetchingNewDate}>
-              {isGenerating ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Sparkles className="mr-2 h-4 w-4" />
-              )}
-              {isGenerating ? 'Generating...' : 'Generate AI Description'}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={handleGenerateDescription} disabled={isLoading}>
+                {generating === 'description' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-2 h-4 w-4" />
+                )}
+                {generating === 'description' ? 'Generating...' : 'Generate AI Description'}
+              </Button>
+               <Button onClick={handleGenerateELI5} disabled={isLoading} variant="secondary">
+                {generating === 'eli5' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Baby className="mr-2 h-4 w-4" />
+                )}
+                {generating === 'eli5' ? 'Explaining...' : "Explain Like I'm 5"}
+              </Button>
+            </div>
 
-            {(isGenerating || aiDescription) && (
-              <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
-                <AccordionItem value="item-1" className="border-accent/30">
-                   <AccordionTrigger className="text-accent hover:no-underline">
-                     <div className="flex items-center gap-2">
-                       <Info className="h-5 w-5" />
-                       AI Generated Description
-                     </div>
-                   </AccordionTrigger>
-                   <AccordionContent>
-                     {isGenerating && (
-                       <div className="space-y-2 pt-2">
-                         <Skeleton className="h-4 w-full" />
-                         <Skeleton className="h-4 w-full" />
-                         <Skeleton className="h-4 w-3/4" />
-                       </div>
-                     )}
-                     {aiDescription && (
-                       <p className="leading-relaxed text-foreground/90 pt-2">{aiDescription}</p>
-                     )}
-                   </AccordionContent>
-                </AccordionItem>
+            {(generating || aiDescription || aiELI5) && (
+              <Accordion type="single" collapsible className="w-full" defaultValue={aiDescription ? 'desc-item' : 'eli5-item'}>
+                { (generating === 'description' || aiDescription) && (
+                    <AccordionItem value="desc-item" className="border-accent/30">
+                    <AccordionTrigger className="text-accent hover:no-underline">
+                        <div className="flex items-center gap-2">
+                        <Info className="h-5 w-5" />
+                        AI Generated Description
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        {generating === 'description' && (
+                        <div className="space-y-2 pt-2">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-3/4" />
+                        </div>
+                        )}
+                        {aiDescription && (
+                        <p className="leading-relaxed text-foreground/90 pt-2">{aiDescription}</p>
+                        )}
+                    </AccordionContent>
+                    </AccordionItem>
+                )}
+                { (generating === 'eli5' || aiELI5) && (
+                    <AccordionItem value="eli5-item" className="border-accent/30">
+                    <AccordionTrigger className="text-accent hover:no-underline">
+                        <div className="flex items-center gap-2">
+                        <Baby className="h-5 w-5" />
+                        ELI5 Explanation
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        {generating === 'eli5' && (
+                        <div className="space-y-2 pt-2">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-3/4" />
+                        </div>
+                        )}
+                        {aiELI5 && (
+                        <p className="leading-relaxed text-foreground/90 pt-2">{aiELI5}</p>
+                        )}
+                    </AccordionContent>
+                    </AccordionItem>
+                )}
               </Accordion>
             )}
           </CardFooter>

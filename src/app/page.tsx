@@ -13,7 +13,7 @@ export default function LandingPage() {
           <div className="absolute -bottom-20 -right-40 w-[400px] h-[400px] bg-accent/20 rounded-full filter blur-3xl opacity-30 animate-pulse delay-2000"></div>
 
           <div className="relative z-10">
-            <h1 className="text-5xl md:text-7xl font-bold font-headline bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 pb-4">
+            <h1 className="text-5xl md:text-7xl font-bold font-headline pb-4">
               Explore the Universe
             </h1>
             <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">

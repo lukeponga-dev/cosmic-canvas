@@ -1,4 +1,6 @@
 {
-  "firebase_hosting": {},
+  "firebase_hosting": {
+    "deploymentHostingUrl": "https://app-android-455005.web.app"
+  },
   "cloud_run_deploy": {}
 }

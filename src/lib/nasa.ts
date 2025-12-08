@@ -60,6 +60,6 @@ export async function getRecentApods(count: number): Promise<ApodData[]> {
         throw new Error(data.msg);
     }
     
-    // The API returns images in chronological order, so we reverse it to get the most recent first.
-    return data.reverse();
+    // Sort the data by date in descending order to ensure the most recent is first.
+    return data.sort((a: ApodData, b: ApodData) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }

@@ -204,7 +204,7 @@ export function ApodCard({ initialApodData }: ApodCardProps) {
                     <PenLine className="mr-2 h-4 w-4" />
                   )}
                   {generating === 'haiku' ? 'Writing...' : 'Haiku'}
-                </button>
+                </Button>
               </div>
 
               {(generating || aiDescription || aiELI5 || aiHaiku) && (

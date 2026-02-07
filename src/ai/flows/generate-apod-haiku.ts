@@ -28,7 +28,7 @@ export type GenerateApodHaikuOutput = z.infer<
   typeof GenerateApodHaikuOutputSchema
 >;
 
-export const generateApodHaiku = ai.flow(
+export const generateApodHaiku = ai.defineFlow(
   {
     name: 'generateApodHaiku',
     inputSchema: GenerateApodHaikuInputSchema,
@@ -37,7 +37,7 @@ export const generateApodHaiku = ai.flow(
   async ({imageUrl, title}) => {
     const llmResponse = await ai.generate({
       prompt: `Generate a haiku (5-7-5 syllables) about the following astronomy picture of the day. Be creative and evocative.\n\n      Image Title: ${title}\n      `,
-      model: 'gemini-1.5-flash',
+      model: 'googleai/gemini-pro',
       tools: [],
       context: [
         {

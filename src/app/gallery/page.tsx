@@ -53,7 +53,7 @@ export default async function GalleryPage() {
             ) : (
                 <React.Suspense fallback={<GallerySkeleton />}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {recentApods.filter(apod => apod.media_type === 'image').map((apod) => (
+                        {recentApods.filter(apod => apod.media_type === 'image').map((apod, index) => (
                             <Link href={`/apod?date=${apod.date}`} key={apod.date}>
                                 <Card className="overflow-hidden hover:shadow-lg hover:border-primary transition-all duration-300 h-full flex flex-col">
                                     <CardContent className="p-0 aspect-square relative flex-grow">
@@ -63,7 +63,7 @@ export default async function GalleryPage() {
                                             fill
                                             className="object-cover"
                                             data-ai-hint="galaxy stars"
-                                            loading='lazy'
+                                            priority={index === 0}
                                         />
                                     </CardContent>
                                     <CardFooter className="p-4">

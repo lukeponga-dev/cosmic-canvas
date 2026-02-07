@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { format, parseISO } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { Sparkles, Loader2, Info, Baby } from 'lucide-react';
 
 import { type ApodData } from '@/lib/types';
@@ -98,7 +98,7 @@ export function ApodCard({ initialApodData }: ApodCardProps) {
   };
 
   const { title, explanation, url, media_type, copyright } = apodData;
-  const displayDate = format(date!, 'MMMM d, yyyy');
+  const displayDate = date && isValid(date) ? format(date, 'MMMM d, yyyy') : 'Invalid date';
 
   const isLoading = generating !== 'none' || isFetchingNewDate;
 

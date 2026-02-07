@@ -27,13 +27,17 @@ function GallerySkeleton() {
 
 export default async function GalleryPage() {
     let recentApods: ApodData[] = [];
-    let error = null;
+    let error: string | null = null;
 
     try {
         recentApods = await getRecentApods(12);
     } catch (e: any) {
-        console.error(e.message);
-        error = e.message || 'An unknown error occurred.';
+        console.error('An error occurred while fetching recent APODs:', e);
+        let errorMessage = 'An unknown error occurred.';
+        if (e?.message) {
+            errorMessage = typeof e.message === 'string' ? e.message : JSON.stringify(e.message);
+        }
+        error = errorMessage;
     }
 
     return (

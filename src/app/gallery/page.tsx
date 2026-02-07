@@ -32,6 +32,7 @@ export default async function GalleryPage() {
     try {
         recentApods = await getRecentApods(12);
     } catch (e: any) {
+        console.error(e.message);
         error = e.message || 'An unknown error occurred.';
     }
 

@@ -41,12 +41,12 @@ const generateApodExplanationELI5Flow = ai.defineFlow(
   },
   async input => {
     const { text } = await ai.generate({
-      model: 'googleai/gemini-1.5-flash-latest',
+      model: 'googleai/gemini-2.5-flash',
       prompt: [
         { text: `You are a friendly and enthusiastic science teacher who loves explaining complex space topics to young children. Your task is to explain an astronomy picture in a very simple and fun way, as if you were talking to a five-year-old. Use simple words, short sentences, and fun analogies.\n\n  Title: ${input.title}\n\n  Simple Explanation:` },
         { media: { url: input.imageUrl } },
       ],
     });
-    return { explanation: text() };
+    return { explanation: text };
   }
 );

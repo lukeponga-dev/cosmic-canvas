@@ -6,17 +6,17 @@ import Link from 'next/link';
 export default function LandingPage() {
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex-1 flex items-center justify-center text-center px-4">
+      <div className="flex-1 flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
         <div className="relative max-w-3xl">
           {/* Background Glow */}
-          <div className="absolute -top-20 -left-40 w-[400px] h-[400px] bg-primary/20 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
-          <div className="absolute -bottom-20 -right-40 w-[400px] h-[400px] bg-accent/20 rounded-full filter blur-3xl opacity-30 animate-pulse delay-2000"></div>
+          <div className="absolute -top-20 -left-40 w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] bg-primary/20 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
+          <div className="absolute -bottom-20 -right-40 w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] bg-accent/20 rounded-full filter blur-3xl opacity-30 animate-pulse delay-2000"></div>
 
           <div className="relative z-10">
-            <h1 className="text-5xl md:text-7xl font-bold font-headline pb-4">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold font-headline pb-4">
               Explore the Universe
             </h1>
-            <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
+            <p className="mt-4 text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
               Journey through the cosmos with stunning images and expert explanations from NASA's Astronomy Picture of the Day.
             </p>
             <div className="mt-8">
